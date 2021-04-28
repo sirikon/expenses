@@ -1,0 +1,7 @@
+#!/usr/bin/env bash
+set -euo pipefail
+cd src
+deno run \
+    --allow-net \
+    --import-map import_map.json \
+    main.ts "${@:2}"

@@ -1,6 +1,6 @@
-import { readLines } from "https://deno.land/std@0.95.0/io/bufio.ts";
+import { readLines } from "std/io/bufio.ts";
 
-import { login, getAccountContracts } from './sources/bbva.ts';
+import { login, getAccountContracts } from '@/sources/bbva.ts';
 
 async function main() {
     const creds = await askCredentials();
