@@ -1,9 +1,14 @@
-export interface Auth {
-    tsec: any;
-    loginResult: any;
+export interface Credentials {
+    username: string;
+    password: string;
 }
 
-export async function login(username: string, password: string): Promise<Auth> {
+export interface Auth {
+    tsec: string;
+    userId: string;
+}
+
+export async function login(credentials: Credentials): Promise<Auth> {
     const response = await apiRequest(
         'POST',
         'https://www.bbva.es/ASO/TechArchitecture/grantingTickets/V02',
@@ -11,25 +16,25 @@ export async function login(username: string, password: string): Promise<Auth> {
             "authentication": {
                 "consumerID": "00000001",
                 "authenticationType": "02",
-                "userID": "0019-0" + username,
+                "userID": "0019-0" + credentials.username,
                 "authenticationData": [
                     {
-                        "authenticationData": [password],
+                        "authenticationData": [credentials.password],
                         "idAuthenticationData": "password"
                     }
                 ]
             }
         });
     return {
-        tsec: response.headers.get('tsec'),
-        loginResult: await response.json()
+        tsec: response.headers.get('tsec')!,
+        userId: (await response.json()).user.id
     }
 }
 
 export async function getAccountContracts(auth: Auth): Promise<any[]> {
     const response = await apiRequest(
         'GET',
-        `https://www.bbva.es/ASO/financialDashBoard/V03/?$customer.id=${auth.loginResult.user.id}&$filter=(hasSicav==false;showPending==true)`,
+        `https://www.bbva.es/ASO/financialDashBoard/V03/?$customer.id=${auth.userId}&$filter=(hasSicav==false;showPending==true)`,
         null,
         { tsec: auth.tsec }
     )

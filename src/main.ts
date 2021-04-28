@@ -1,15 +1,15 @@
 import { readLines } from "std/io/bufio.ts";
 
-import { login, getAccountContracts } from '@/sources/bbva.ts';
+import { login, getAccountContracts, Credentials } from '@/sources/bbva.ts';
 
 async function main() {
-    const creds = await askCredentials();
-    const auth = await login(creds.username, creds.password);
+    const credentials = await askCredentials();
+    const auth = await login(credentials);
     const contracts = await getAccountContracts(auth);
     console.log(contracts);
 }
 
-async function askCredentials() {
+async function askCredentials(): Promise<Credentials> {
     return {
         username: await ask('Username'),
         password: await ask('Password')
