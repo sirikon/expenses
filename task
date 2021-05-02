@@ -2,6 +2,8 @@
 
 commands=(
     run
+    build
+    install
 )
 
 function run {(
@@ -13,6 +15,18 @@ function run {(
         ../src/main.ts "${@:1}"
 )}
 
+function build {(
+    mkdir -p bin
+    deno compile \
+        --unstable --allow-all \
+        --import-map ./src/import_map.json \
+        --output bin/expenses \
+        ./src/main.ts
+)}
+
+function install {(
+    cp ./bin/expenses /usr/local/bin/expenses
+)}
 
 
 
