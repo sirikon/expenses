@@ -1,28 +1,25 @@
-import { readLines } from "std/io/bufio.ts";
+import loginCommand from "@/commands/login.ts"
+import collectCommand from "@/commands/collect.ts"
 
-import { login, getAccountContracts, Credentials } from '@/sources/bbva.ts';
-
-async function main() {
-    const credentials = await askCredentials();
-    const auth = await login(credentials);
-    const contracts = await getAccountContracts(auth);
-    console.log(contracts);
+const commands: { [key: string]: (args: string[]) => Promise<void> } = {
+    login: loginCommand,
+    collect: collectCommand
 }
 
-async function askCredentials(): Promise<Credentials> {
-    return {
-        username: await ask('Username'),
-        password: await ask('Password')
+async function main(args: string[]) {
+    if (args.length === 0) {
+        console.log('Usage: expenses <command>');
+        console.log('Commands:');
+        Object.keys(commands).forEach(c => console.log(`  ${c}`));
+        return;
     }
-}
 
-async function ask(description: string): Promise<string> {
-    Deno.stdout.write(new TextEncoder().encode(`${description}: `));
-    for await (const line of readLines(Deno.stdin)) {
-        if (line === '') continue;
-        return line;
+    const [command, ...commandArgs] = args;
+    if (!commands[command]) {
+        console.log(`Unknown command ${command}`);
+        return
     }
-    return '';
+    await commands[command](commandArgs);
 }
 
-await main();
+await main(Deno.args);
