@@ -1,8 +1,0 @@
-#!/usr/bin/env bash
-set -euo pipefail
-mkdir -p testing-folder
-cd testing-folder
-deno run \
-    --unstable --allow-all \
-    --import-map ../src/import_map.json \
-    ../src/main.ts "${@:1}"
