@@ -31,7 +31,7 @@ export async function login(credentials: Credentials): Promise<Auth> {
     }
 }
 
-export async function getAccountContracts(auth: Auth): Promise<any[]> {
+export async function getAccountContracts(auth: Auth): Promise<string[]> {
     const response = await apiRequest(
         'GET',
         `https://www.bbva.es/ASO/financialDashBoard/V03/?$customer.id=${auth.userId}&$filter=(hasSicav==false;showPending==true)`,
@@ -40,11 +40,57 @@ export async function getAccountContracts(auth: Auth): Promise<any[]> {
     )
     const data = await response.json();
 
-    const accountContracts = data.positions
+    const accountContracts: string[] = data.positions
         .filter((p: any) => p.contract.account)
         .map((p: any) => p.contract.account.id)
 
     return [...new Set(accountContracts)];
+}
+
+export async function getTransactions(auth: Auth, contracts: string[]): Promise<any[]> {
+    const pageSize = 40;
+    let paginationKey = '0';
+    const transactions = [];
+    while(paginationKey !== null) {
+        const result = await getTransactionsPage(auth, contracts, pageSize, paginationKey);
+        transactions.push(...result.accountTransactions);
+        paginationKey = getNextPaginationKey(result);
+    }
+    return transactions;
+}
+
+async function getTransactionsPage(auth: Auth, contracts: string[], pageSize: number, paginationKey: string) {
+    const path = `https://www.bbva.es/ASO/accountTransactions/V02/accountTransactionsAdvancedSearch?paginationKey=${paginationKey}&pageSize=${pageSize}`;
+    const response = await apiRequest('POST', path, {
+        "accountContracts": contracts.map((c) => {
+            return { contract: { id: c } }
+        }),
+        "customer": {
+            "id": auth.userId
+        },
+        "searchText": null,
+        "orderField": "DATE_FIELD",
+        "orderType": "DESC_ORDER",
+        "filter": {
+            "amounts": {
+                "from": null,
+                "to": null,
+            },
+            "dates": {
+                "from": null,
+                "to": null
+            },
+            "operationType": null
+        }
+    }, { tsec: auth.tsec });
+    return response.json();
+}
+
+function getNextPaginationKey(result: any) {
+    const nextPage = result.pagination.nextPage;
+    if (!nextPage) { return null; }
+    const paginationKey = nextPage.split('paginationKey=')[1].split('&')[0];
+    return paginationKey;
 }
 
 async function apiRequest(method: string, url: string, body: any, headers: HeadersInit = {}) {
