@@ -20,7 +20,7 @@ function build {(
     deno compile \
         --unstable --allow-all \
         --import-map ./src/import_map.json \
-        --output bin/expenses \
+        --lite --output bin/expenses \
         ./src/main.ts
 )}
 
