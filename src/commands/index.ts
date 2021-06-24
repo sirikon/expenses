@@ -1,3 +1,4 @@
+import { exists } from 'std/fs/mod.ts'
 import { DB } from "sqlite/mod.ts";
 
 export default async function indexCommand() {
@@ -24,6 +25,7 @@ export default async function indexCommand() {
 
 const DB_FILE_NAME = "./transactions_index.db"
 async function removeDatabase() {
+    if (!await exists(DB_FILE_NAME)) return;
     await Deno.remove(DB_FILE_NAME)
 }
 
