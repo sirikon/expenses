@@ -11,7 +11,7 @@ export interface Auth {
 export async function login(credentials: Credentials): Promise<Auth> {
     const response = await apiRequest(
         'POST',
-        'https://www.bbva.es/ASO/TechArchitecture/grantingTickets/V02',
+        buildUrl('/TechArchitecture/grantingTickets/V02'),
         {
             "authentication": {
                 "consumerID": "00000001",
@@ -34,7 +34,7 @@ export async function login(credentials: Credentials): Promise<Auth> {
 export async function getAccountContracts(auth: Auth): Promise<string[]> {
     const response = await apiRequest(
         'GET',
-        `https://www.bbva.es/ASO/financialDashBoard/V03/?$customer.id=${auth.userId}&$filter=(hasSicav==false;showPending==true)`,
+        buildUrl(`/financialDashBoard/V03/?$customer.id=${auth.userId}&$filter=(hasSicav==false;showPending==true)`),
         null,
         { tsec: auth.tsec }
     )
@@ -60,7 +60,7 @@ export async function getTransactions(auth: Auth, contracts: string[]): Promise<
 }
 
 async function getTransactionsPage(auth: Auth, contracts: string[], pageSize: number, paginationKey: string) {
-    const path = `https://www.bbva.es/ASO/accountTransactions/V02/accountTransactionsAdvancedSearch?paginationKey=${paginationKey}&pageSize=${pageSize}`;
+    const path = buildUrl(`/accountTransactions/V02/accountTransactionsAdvancedSearch?paginationKey=${paginationKey}&pageSize=${pageSize}`);
     const response = await apiRequest('POST', path, {
         "accountContracts": contracts.map((c) => {
             return { contract: { id: c } }
@@ -110,4 +110,9 @@ async function apiRequest(method: string, url: string, body: any, headers: Heade
         throw new Error(`API Request failed with status code ${response.status}`);
     }
     return response;
+}
+
+const BASE_URL = 'https://www.bbva.es/ASO'
+function buildUrl(path: String) {
+    return `${BASE_URL}${path}`;
 }
