@@ -1,9 +1,11 @@
 import loginCommand from "@/commands/login.ts"
 import collectCommand from "@/commands/collect.ts"
+import indexCommand from "@/commands/index.ts"
 
 const commands: { [key: string]: (args: string[]) => Promise<void> } = {
     login: loginCommand,
-    collect: collectCommand
+    collect: collectCommand,
+    index: indexCommand,
 }
 
 async function main(args: string[]) {
