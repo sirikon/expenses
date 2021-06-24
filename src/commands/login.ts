@@ -1,5 +1,3 @@
-import { readLines } from "std/io/bufio.ts";
-
 import { login, Credentials } from '@/sources/bbva.ts';
 
 export default async function loginCommand() {
@@ -23,22 +21,6 @@ async function askCredentials(): Promise<Credentials> {
         password
     }
 }
-
-// async function askCredentials(): Promise<Credentials> {
-//     return {
-//         username: await ask('Username'),
-//         password: await ask('Password')
-//     }
-// }
-
-// async function ask(description: string): Promise<string> {
-//     Deno.stdout.write(new TextEncoder().encode(`${description}: `));
-//     for await (const line of readLines(Deno.stdin)) {
-//         if (line === '') continue;
-//         return line;
-//     }
-//     return '';
-// }
 
 async function setFileContent(path: string, content: string): Promise<void> {
     const encoder = new TextEncoder();
