@@ -114,7 +114,7 @@ function getNextPaginationKey(result: any) {
 async function apiRequest(
   method: string,
   url: string,
-  body: any,
+  body: unknown,
   headers: HeadersInit = {},
 ) {
   const requestBody = body ? JSON.stringify(body) : null;
@@ -136,6 +136,6 @@ async function apiRequest(
 }
 
 const BASE_URL = "https://www.bbva.es/ASO";
-function buildUrl(path: String) {
+function buildUrl(path: string) {
   return `${BASE_URL}${path}`;
 }
