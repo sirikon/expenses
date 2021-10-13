@@ -1,49 +1,47 @@
 #!/usr/bin/env bash
 
 commands=(
-    run
-    build
-    install
+  run
+  build
+  install
 )
 
-function run {(
-    mkdir -p testing-folder
-    cd testing-folder
-    deno run \
-        --unstable --allow-all \
-        --import-map ../src/import_map.json \
-        ../src/main.ts "${@:1}"
-)}
+function run { (
+  mkdir -p testing-folder
+  cd testing-folder
+  deno run \
+    --unstable --allow-all \
+    --import-map ../src/import_map.json \
+    ../src/main.ts "${@:1}"
+); }
 
-function build {(
-    mkdir -p bin
-    deno compile \
-        --unstable --allow-all \
-        --import-map ./src/import_map.json \
-        --output bin/expenses \
-        ./src/main.ts
-)}
+function build { (
+  mkdir -p bin
+  deno compile \
+    --unstable --allow-all \
+    --import-map ./src/import_map.json \
+    --output bin/expenses \
+    ./src/main.ts
+); }
 
-function install {(
-    cp ./bin/expenses /usr/local/bin/expenses
-)}
-
-
+function install { (
+  cp ./bin/expenses /usr/local/bin/expenses
+); }
 
 function help {
-    printf "%s\n" "Available commands:"
-    printf " %s\n" "${commands[@]}" help
+  printf "%s\n" "Available commands:"
+  printf " %s\n" "${commands[@]}" help
 }
 
 function run-command {
-    command="$1"
-    for c in "${commands[@]}"; do
-        if [ "$c" = "$command" ]; then
-            ("$command" "${@:2}")
-            return
-        fi
-    done
-    printf "%s\n" "Command '${command}' does not exist."
+  command="$1"
+  for c in "${commands[@]}"; do
+    if [ "$c" = "$command" ]; then
+      ("$command" "${@:2}")
+      return
+    fi
+  done
+  printf "%s\n" "Command '${command}' does not exist."
 }
 
 set -euo pipefail

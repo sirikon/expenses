@@ -1,7 +1,7 @@
 {
-    "editor.detectIndentation": false,
-    "editor.tabSize": 2,
-    "deno.enable": true,
-    "deno.importMap": "./src/import_map.json",
-    "deno.lint": true,
+  "editor.detectIndentation": false,
+  "editor.tabSize": 2,
+  "deno.enable": true,
+  "deno.importMap": "./src/import_map.json",
+  "deno.lint": true
 }
