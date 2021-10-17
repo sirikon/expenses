@@ -5,7 +5,7 @@ from subprocess import run
 def cli():
 
     @command
-    def start_front(*args):
+    def start_front():
         run(['npm', 'start'], cwd='front')
 
     @command
@@ -33,13 +33,17 @@ def cli():
 
 
 
-
-import sys, os; os.chdir(os.path.dirname(__file__)); commands = []
+import inspect, sys, os; os.chdir(os.path.dirname(__file__)); commands = []
 def command(func): commands.append(func); return func
 cli(); args = sys.argv[1:]
 if len(args) == 0:
-    command_names = [f.__name__ for f in commands]
-    print("Available commands:"); [print(f' {n}') for n in command_names]
+    print("Available commands:")
+    for f in commands:
+        sys.stdout.write(f' {f.__name__}')
+        spec = inspect.getfullargspec(f)
+        [sys.stdout.write(f' <{a}>') for a in spec.args]
+        if spec.varargs is not None: sys.stdout.write(f' <...{spec.varargs}>')
+        sys.stdout.write('\n')
     exit(0)
 matching_commands = [f for f in commands if f.__name__ == args[0]]
 if len(matching_commands) == 0: print(f'Unknown command "{args[0]}"'); exit(1)
