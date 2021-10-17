@@ -1,50 +1,42 @@
-#!/usr/bin/env bash
+#!/usr/bin/env python3
+from os import path, makedirs, getcwd
+from subprocess import run
 
-commands=(
-  run
-  build
-  install
-)
+def cli():
 
-function run { (
-  mkdir -p testing-folder
-  cd testing-folder
-  deno run \
-    --unstable --allow-all \
-    --import-map ../src/import_map.json \
-    ../src/main.ts "${@:1}"
-); }
+    @command
+    def start(*args):
+        makedirs('testing-folder', exist_ok=True)
+        run(['deno', 'run', *deno_flags(), *args], cwd='testing-folder')
 
-function build { (
-  mkdir -p bin
-  deno compile \
-    --unstable --allow-all \
-    --import-map ./src/import_map.json \
-    --output bin/expenses \
-    ./src/main.ts
-); }
+    @command
+    def build():
+        makedirs('bin', exist_ok=True)
+        run(['deno', 'compile', *deno_flags('--output', 'bin/expenses')])
 
-function install { (
-  cp ./bin/expenses /usr/local/bin/expenses
-); }
+    @command
+    def install():
+        run(['cp', './bin/expenses', '/usr/local/bin/expenses'])
 
-function help {
-  printf "%s\n" "Available commands:"
-  printf " %s\n" "${commands[@]}" help
-}
+    def deno_flags(*args):
+        return [
+            '--unstable', '--allow-all',
+            '--import-map', path.join(getcwd(), 'back', 'src', 'import_map.json'),
+            *args,
+            path.join(getcwd(), 'back', 'src', 'main.ts')
+        ]
 
-function run-command {
-  command="$1"
-  for c in "${commands[@]}"; do
-    if [ "$c" = "$command" ]; then
-      ("$command" "${@:2}")
-      return
-    fi
-  done
-  printf "%s\n" "Command '${command}' does not exist."
-}
 
-set -euo pipefail
-cd "$(dirname "${BASH_SOURCE[0]}")"
-[ -z "${1:-""}" ] || [ "${1:-""}" = "help" ] && help && exit 0
-run-command "${1}" "${@:2}"
+
+
+
+import sys, os; os.chdir(os.path.dirname(__file__)); commands = []
+def command(func): commands.append(func); return func
+cli(); args = sys.argv[1:]
+if len(args) == 0:
+    command_names = [f.__name__ for f in commands]
+    print("Available commands:"); [print(f' {n}') for n in command_names]
+    exit(0)
+matching_commands = [f for f in commands if f.__name__ == args[0]]
+matching_commands[0](*args[1:]) if len(matching_commands) > 0 \
+    else print(f'Unknown command "{args[0]}"')
