@@ -38,5 +38,6 @@ if len(args) == 0:
     print("Available commands:"); [print(f' {n}') for n in command_names]
     exit(0)
 matching_commands = [f for f in commands if f.__name__ == args[0]]
-matching_commands[0](*args[1:]) if len(matching_commands) > 0 \
-    else print(f'Unknown command "{args[0]}"')
+if len(matching_commands) == 0: print(f'Unknown command "{args[0]}"'); exit(1)
+try: matching_commands[0](*args[1:])
+except KeyboardInterrupt: pass

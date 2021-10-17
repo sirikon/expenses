@@ -1,27 +1,31 @@
-import loginCommand from "@/commands/login.ts";
-import collectCommand from "@/commands/collect.ts";
-import indexCommand from "@/commands/index.ts";
+import webServer from './web/server.ts'
 
-const commands: { [key: string]: (args: string[]) => Promise<void> } = {
-  login: loginCommand,
-  collect: collectCommand,
-  index: indexCommand,
-};
+await webServer()
 
-async function main(args: string[]) {
-  if (args.length === 0) {
-    console.log("Usage: expenses <command>");
-    console.log("Commands:");
-    Object.keys(commands).forEach((c) => console.log(`  ${c}`));
-    return;
-  }
+// import loginCommand from "@/commands/login.ts";
+// import collectCommand from "@/commands/collect.ts";
+// import indexCommand from "@/commands/index.ts";
 
-  const [command, ...commandArgs] = args;
-  if (!commands[command]) {
-    console.log(`Unknown command ${command}`);
-    return;
-  }
-  await commands[command](commandArgs);
-}
+// const commands: { [key: string]: (args: string[]) => Promise<void> } = {
+//   login: loginCommand,
+//   collect: collectCommand,
+//   index: indexCommand,
+// };
 
-await main(Deno.args);
+// async function main(args: string[]) {
+//   if (args.length === 0) {
+//     console.log("Usage: expenses <command>");
+//     console.log("Commands:");
+//     Object.keys(commands).forEach((c) => console.log(`  ${c}`));
+//     return;
+//   }
+
+//   const [command, ...commandArgs] = args;
+//   if (!commands[command]) {
+//     console.log(`Unknown command ${command}`);
+//     return;
+//   }
+//   await commands[command](commandArgs);
+// }
+
+// await main(Deno.args);
