@@ -2,6 +2,8 @@
 // section between comments GENERATED and END GENERATED (including the comments)
 // is not removed
 
+declare const EXPENSES_BASE_URL: string;
+
 // GENERATED teseract definitions
 declare module "*.jpg" {
   const content: string;

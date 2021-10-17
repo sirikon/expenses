@@ -1,7 +1,7 @@
 import React, { useState } from "react";
 
 export default () => {
-  const [text, setText] = useState("Hello World");
+  const [text, setText] = useState(EXPENSES_BASE_URL);
 
   return <>
     <h1>{text}</h1>

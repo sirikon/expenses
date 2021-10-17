@@ -5,7 +5,11 @@ from subprocess import run
 def cli():
 
     @command
-    def start(*args):
+    def start_front(*args):
+        run(['npm', 'start'], cwd='front')
+
+    @command
+    def start_back(*args):
         makedirs('testing-folder', exist_ok=True)
         run(['deno', 'run', *deno_flags(), *args], cwd='testing-folder')
 
@@ -21,7 +25,7 @@ def cli():
     def deno_flags(*args):
         return [
             '--unstable', '--allow-all',
-            '--import-map', path.join(getcwd(), 'back', 'src', 'import_map.json'),
+            '--import-map', path.join(getcwd(), 'back', 'import_map.json'),
             *args,
             path.join(getcwd(), 'back', 'src', 'main.ts')
         ]
