@@ -33,6 +33,7 @@ def cli():
 
 
 
+# https://gist.github.com/sirikon/d4327b6cc3de5cc244dbe5529d8f53ae
 import inspect, sys, os; os.chdir(os.path.dirname(__file__)); commands = []
 def spec(f): return inspect.getfullargspec(f)
 def command(func): commands.append(func); return func
