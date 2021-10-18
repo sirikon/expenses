@@ -2,6 +2,16 @@
   "editor.detectIndentation": false,
   "editor.tabSize": 2,
   "deno.enable": true,
-  "deno.importMap": "./src/import_map.json",
-  "deno.lint": true
+  "deno.importMap": "./import_map.json",
+  "deno.lint": true,
+  "deno.unstable": true,
+  "[typescript]": {
+    "editor.defaultFormatter": "denoland.vscode-deno"
+  },
+  "[json]": {
+    "editor.defaultFormatter": "denoland.vscode-deno"
+  },
+  "[jsonc]": {
+    "editor.defaultFormatter": "denoland.vscode-deno"
+  }
 }

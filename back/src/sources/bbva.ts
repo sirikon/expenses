@@ -1,14 +1,29 @@
-export interface Credentials {
+import { SourceCredsScheme, TransactionSource } from "@/core/models.ts";
+
+const BASE_URL = "https://www.bbva.es/ASO";
+
+type BBVACredentials = {
   username: string;
   password: string;
-}
+};
 
-export interface Auth {
+type BBVAAuth = {
   tsec: string;
   userId: string;
+};
+
+export default class implements TransactionSource<BBVACredentials, BBVAAuth> {
+  readonly id = 'bbva';
+  readonly name = 'BBVA';
+  readonly credentialsScheme: SourceCredsScheme<BBVACredentials> = {
+    username: "text",
+    password: "password",
+  };
+
+  login = (creds: BBVACredentials) => login(creds);
 }
 
-export async function login(credentials: Credentials): Promise<Auth> {
+async function login(credentials: BBVACredentials): Promise<BBVAAuth> {
   const response = await apiRequest(
     "POST",
     buildUrl("/TechArchitecture/grantingTickets/V02"),
@@ -32,7 +47,7 @@ export async function login(credentials: Credentials): Promise<Auth> {
   };
 }
 
-export async function getAccountContracts(auth: Auth): Promise<string[]> {
+export async function getAccountContracts(auth: BBVAAuth): Promise<string[]> {
   const response = await apiRequest(
     "GET",
     buildUrl(
@@ -51,7 +66,7 @@ export async function getAccountContracts(auth: Auth): Promise<string[]> {
 }
 
 export async function getTransactions(
-  auth: Auth,
+  auth: BBVAAuth,
   contracts: string[],
 ): Promise<any[]> {
   const pageSize = 40;
@@ -71,7 +86,7 @@ export async function getTransactions(
 }
 
 async function getTransactionsPage(
-  auth: Auth,
+  auth: BBVAAuth,
   contracts: string[],
   pageSize: number,
   paginationKey: string,
@@ -135,7 +150,6 @@ async function apiRequest(
   return response;
 }
 
-const BASE_URL = "https://www.bbva.es/ASO";
 function buildUrl(path: string) {
   return `${BASE_URL}${path}`;
 }
