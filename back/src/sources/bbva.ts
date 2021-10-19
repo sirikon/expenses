@@ -47,7 +47,7 @@ async function login(credentials: BBVACredentials): Promise<BBVAAuth> {
   };
 }
 
-export async function getAccountContracts(auth: BBVAAuth): Promise<string[]> {
+async function getAccountContracts(auth: BBVAAuth): Promise<string[]> {
   const response = await apiRequest(
     "GET",
     buildUrl(
@@ -65,7 +65,7 @@ export async function getAccountContracts(auth: BBVAAuth): Promise<string[]> {
   return [...new Set(accountContracts)];
 }
 
-export async function getTransactions(
+async function getTransactions(
   auth: BBVAAuth,
   contracts: string[],
 ): Promise<any[]> {
