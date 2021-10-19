@@ -1,4 +1,4 @@
-import { SourceCredsScheme, TransactionSource } from "@/core/models.ts";
+import { SourceCredsSchemeBase, SourceBase } from "@/core/models.ts";
 
 const BASE_URL = "https://www.bbva.es/ASO";
 
@@ -12,10 +12,10 @@ type BBVAAuth = {
   userId: string;
 };
 
-export default class implements TransactionSource<BBVACredentials, BBVAAuth> {
+export class BBVASource implements SourceBase<BBVACredentials, BBVAAuth> {
   readonly id = 'bbva';
   readonly name = 'BBVA';
-  readonly credentialsScheme: SourceCredsScheme<BBVACredentials> = {
+  readonly credsScheme: SourceCredsSchemeBase<BBVACredentials> = {
     username: "text",
     password: "password",
   };

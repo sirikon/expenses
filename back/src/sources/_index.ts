@@ -1,3 +1,6 @@
-import { TransactionSource } from '../core/models.ts'
-import bbva from './bbva.ts'
-export const sources: Array<TransactionSource> = []
+import { Source } from '../core/models.ts'
+import { BBVASource } from './bbva.ts'
+
+export const sources: Array<Source> = [
+  new BBVASource()
+]
