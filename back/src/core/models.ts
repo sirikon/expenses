@@ -27,6 +27,6 @@ export abstract class SourceBase<
 > implements Source {
   abstract id: string;
   abstract name: string;
-  abstract credsScheme: { [key in keyof TCreds]: "text" | "password" };
+  abstract credsScheme: SourceCredsSchemeBase<TCreds>;
   abstract login(creds: TCreds): Promise<TAuth>;
 }
