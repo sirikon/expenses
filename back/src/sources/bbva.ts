@@ -1,4 +1,4 @@
-import { SourceCredsSchemeBase, SourceBase } from "@/core/models.ts";
+import { SourceCredsSchemeBase, SourceBase, SourceLoginResult } from "@/core/models.ts";
 
 const BASE_URL = "https://www.bbva.es/ASO";
 
@@ -23,28 +23,38 @@ export class BBVASource implements SourceBase<BBVACredentials, BBVAAuth> {
   login = (creds: BBVACredentials) => login(creds);
 }
 
-async function login(credentials: BBVACredentials): Promise<BBVAAuth> {
-  const response = await apiRequest(
-    "POST",
-    buildUrl("/TechArchitecture/grantingTickets/V02"),
-    {
-      "authentication": {
-        "consumerID": "00000001",
-        "authenticationType": "02",
-        "userID": "0019-0" + credentials.username,
-        "authenticationData": [
-          {
-            "authenticationData": [credentials.password],
-            "idAuthenticationData": "password",
-          },
-        ],
+async function login(credentials: BBVACredentials): Promise<SourceLoginResult<BBVAAuth>> {
+  try {
+    const response = await apiRequest(
+      "POST",
+      buildUrl("/TechArchitecture/grantingTickets/V02"),
+      {
+        "authentication": {
+          "consumerID": "00000001",
+          "authenticationType": "02",
+          "userID": "0019-0" + credentials.username,
+          "authenticationData": [
+            {
+              "authenticationData": [credentials.password],
+              "idAuthenticationData": "password",
+            },
+          ],
+        },
       },
-    },
-  );
-  return {
-    tsec: response.headers.get("tsec")!,
-    userId: (await response.json()).user.id,
-  };
+    );
+    return {
+      error: null,
+      auth: {
+        tsec: response.headers.get("tsec")!,
+        userId: (await response.json()).user.id,
+      }
+    }
+  } catch (_) {
+    return {
+      error: 'Login failed',
+      auth: null
+    } 
+  }
 }
 
 async function getAccountContracts(auth: BBVAAuth): Promise<string[]> {

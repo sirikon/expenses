@@ -1,4 +1,6 @@
 {
+    "rest-client.previewResponsePanelTakeFocus": false,
+    "rest-client.previewOption": "exchange",
     "files.exclude": {
         "back": true,
         "front": true

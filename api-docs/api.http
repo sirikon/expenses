@@ -1,0 +1,18 @@
+@host = http://127.0.0.1:8000
+
+# @name get_sources
+GET {{host}}/api/v1/sources
+###
+
+# @name get_source_by_id
+GET {{host}}/api/v1/sources/{{$dotenv SOURCE_ID}}
+###
+
+# @name source_login
+POST {{host}}/api/v1/sources/{{$dotenv SOURCE_ID}}/login
+Content-Type: application/json
+
+{
+    "username": "{{$dotenv SOURCE_USERNAME}}",
+    "password": "{{$dotenv SOURCE_PASSWORD}}"
+}
