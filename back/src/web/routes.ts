@@ -32,6 +32,13 @@ export default (router: ExRouter) => {
 
 }
 
+function getSourceById(id: string): Source | null {
+  const matchingSources = sources.filter(s => s.id === id);
+  return matchingSources.length > 0
+    ? matchingSources[0]
+    : null
+}
+
 function replyOK(ctx: ExContext, body?: Record<string, unknown>) {
   ctx.response.status = 200
   ctx.response.body = body
@@ -44,11 +51,4 @@ function replyNotFound(ctx: ExContext) {
 function replyBadRequest(ctx: ExContext, message?: string) {
   ctx.response.status = 400
   ctx.response.body = { message }
-}
-
-function getSourceById(id: string): Source | null {
-  const matchingSources = sources.filter(s => s.id === id);
-  return matchingSources.length > 0
-    ? matchingSources[0]
-    : null
 }
