@@ -14,6 +14,10 @@ def cli():
         run(['deno', 'run', *deno_flags(), *args], cwd='testing-folder')
 
     @command
+    def format_back():
+        run(['deno', 'fmt'], cwd='back')
+
+    @command
     def build():
         makedirs('bin', exist_ok=True)
         run(['deno', 'compile', *deno_flags('--output', 'bin/expenses')])

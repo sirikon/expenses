@@ -1,6 +1,6 @@
-import webServer from './web/server.ts'
+import webServer from "./web/server.ts";
 
-await webServer()
+await webServer();
 
 // import loginCommand from "@/commands/login.ts";
 // import collectCommand from "@/commands/collect.ts";

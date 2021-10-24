@@ -1,4 +1,8 @@
-import { SourceCredsSchemeBase, SourceBase, SourceLoginResult } from "@/core/models.ts";
+import {
+  SourceBase,
+  SourceCredsSchemeBase,
+  SourceLoginResult,
+} from "@/core/models.ts";
 
 const BASE_URL = "https://www.bbva.es/ASO";
 
@@ -13,8 +17,8 @@ type BBVAAuth = {
 };
 
 export class BBVASource implements SourceBase<BBVACredentials, BBVAAuth> {
-  readonly id = 'bbva';
-  readonly name = 'BBVA';
+  readonly id = "bbva";
+  readonly name = "BBVA";
   readonly credsScheme: SourceCredsSchemeBase<BBVACredentials> = {
     username: "text",
     password: "password",
@@ -23,7 +27,9 @@ export class BBVASource implements SourceBase<BBVACredentials, BBVAAuth> {
   login = (creds: BBVACredentials) => login(creds);
 }
 
-async function login(credentials: BBVACredentials): Promise<SourceLoginResult<BBVAAuth>> {
+async function login(
+  credentials: BBVACredentials,
+): Promise<SourceLoginResult<BBVAAuth>> {
   try {
     const response = await apiRequest(
       "POST",
@@ -47,13 +53,13 @@ async function login(credentials: BBVACredentials): Promise<SourceLoginResult<BB
       auth: {
         tsec: response.headers.get("tsec")!,
         userId: (await response.json()).user.id,
-      }
-    }
+      },
+    };
   } catch (_) {
     return {
-      error: 'Login failed',
-      auth: null
-    } 
+      error: "Login failed",
+      auth: null,
+    };
   }
 }
 
