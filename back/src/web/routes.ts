@@ -1,6 +1,7 @@
 import { ExRouter, ExContext } from "./models.ts"
 import { sources } from "../sources/_index.ts"
 import { Source } from "../core/models.ts"
+import * as authStore from "../core/authStore.ts"
 
 export default (router: ExRouter) => {
 
@@ -23,9 +24,10 @@ export default (router: ExRouter) => {
     if (creds.type !== "json") return replyBadRequest(ctx)
 
     const result = await source.login(await creds.value)
-    return result.error != null
-      ? replyBadRequest(ctx, result.error)
-      : replyOK(ctx, result.auth)
+    if (result.error != null) return replyBadRequest(ctx, result.error)
+
+    await authStore.save(source.id, result.auth)
+    return replyOK(ctx)
   })
 
 }
