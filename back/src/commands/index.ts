@@ -40,7 +40,7 @@ function createDatabase(): DB {
 
 function createTransactionsTable(db: DB) {
   db.query(`
-    CREATE TABLE transactions (
+    CREATE TABLE IF NOT EXISTS transactions (
         id TEXT PRIMARY KEY,
         description TEXT,
         shop_id TEXT NULL,

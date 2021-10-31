@@ -1,9 +1,10 @@
 export type Transaction = {
   id: string;
+  source: string;
+  shop: string;
   description: string;
-  shopId: string;
   amount: number;
-  date: Date;
+  timestamp: number;
 };
 
 export type SourceCreds = { [key: string]: string };
