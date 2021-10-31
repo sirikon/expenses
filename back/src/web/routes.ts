@@ -32,7 +32,10 @@ export default (router: ExRouter) => {
     const source = getSourceById(ctx.params.id!);
     if (!source) return replyNotFound(ctx);
 
-    const result = await source.collect(await authStore.get(source.id));
+    const auth = await authStore.get(source.id);
+    if (auth == null) return replyBadRequest(ctx, "Not logged in");
+
+    const result = await source.collect(auth);
     if (result.error != null) return replyBadRequest(ctx, result.error);
 
     await transactionStore.saveTransactionsData(source.id, result.data);

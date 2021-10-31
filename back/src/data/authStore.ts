@@ -1,8 +1,10 @@
+import { exists } from "std/fs/mod.ts";
 import { dirname, join as joinPath } from "std/path/mod.ts";
 import { SourceAuth } from "../core/models.ts";
 
-export async function get(sourceId: string): Promise<SourceAuth> {
+export async function get(sourceId: string): Promise<SourceAuth | null> {
   const path = joinPath("credentials", `${sourceId}.json`);
+  if (!await exists(path)) return null;
 
   const decoder = new TextDecoder();
   const data = decoder.decode(await Deno.readFile(path))
