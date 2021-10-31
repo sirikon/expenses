@@ -1,7 +1,8 @@
 import {
+  Result,
   SourceBase,
   SourceCredsSchemeBase,
-  SourceLoginResult,
+  Transaction,
 } from "@/core/models.ts";
 
 const BASE_URL = "https://www.bbva.es/ASO";
@@ -24,12 +25,13 @@ export class BBVASource implements SourceBase<BBVACredentials, BBVAAuth> {
     password: "password",
   };
 
-  login = (creds: BBVACredentials) => login(creds);
+  login = login
+  collect = collect
 }
 
 async function login(
   credentials: BBVACredentials,
-): Promise<SourceLoginResult<BBVAAuth>> {
+): Promise<Result<BBVAAuth>> {
   try {
     const response = await apiRequest(
       "POST",
@@ -50,7 +52,7 @@ async function login(
     );
     return {
       error: null,
-      auth: {
+      data: {
         tsec: response.headers.get("tsec")!,
         userId: (await response.json()).user.id,
       },
@@ -58,8 +60,23 @@ async function login(
   } catch (_) {
     return {
       error: "Login failed",
-      auth: null,
+      data: null,
     };
+  }
+}
+
+async function collect(auth: BBVAAuth): Promise<Result<{ id: string, data: unknown }[]>> {
+  try {
+    const contracts = await getAccountContracts(auth);
+    return {
+      error: null,
+      data: await getTransactions(auth, contracts)
+    }
+  } catch (_) {
+    return {
+      error: "Collection failed",
+      data: null
+    }
   }
 }
 
@@ -84,7 +101,7 @@ async function getAccountContracts(auth: BBVAAuth): Promise<string[]> {
 async function getTransactions(
   auth: BBVAAuth,
   contracts: string[],
-): Promise<any[]> {
+): Promise<{ id: string, data: unknown }[]> {
   const pageSize = 40;
   let paginationKey = "0";
   const transactions = [];
@@ -98,7 +115,11 @@ async function getTransactions(
     transactions.push(...result.accountTransactions);
     paginationKey = getNextPaginationKey(result);
   }
-  return transactions;
+
+  return transactions.map((t) => ({
+    id: t.id,
+    data: t,
+  }));
 }
 
 async function getTransactionsPage(

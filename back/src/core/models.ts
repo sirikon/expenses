@@ -1,7 +1,6 @@
 export type Transaction = {
   id: string;
-  source: string;
-  shop: string;
+  shop: string | null;
   description: string;
   amount: number;
   timestamp: number;
@@ -15,16 +14,17 @@ export type SourceCredsScheme = { [key: string]: SourceCredsSchemeValues };
 export type SourceCredsSchemeBase<TCreds extends SourceCreds> = {
   [key in keyof TCreds]: SourceCredsSchemeValues;
 };
-export type SourceLoginResult<T> =
-  | { error: null; auth: T }
-  | { error: string; auth: null };
+export type Result<T> =
+  | { error: null; data: T }
+  | { error: string; data: null };
 
 export type Source = {
   readonly id: string;
   readonly name: string;
   readonly credsScheme: SourceCredsScheme;
 
-  login(creds: SourceCreds): Promise<SourceLoginResult<SourceAuth>>;
+  login(creds: SourceCreds): Promise<Result<SourceAuth>>;
+  collect(auth: SourceAuth): Promise<Result<{ id: string, data: unknown }[]>>;
 };
 
 export abstract class SourceBase<
@@ -34,5 +34,6 @@ export abstract class SourceBase<
   abstract id: string;
   abstract name: string;
   abstract credsScheme: SourceCredsSchemeBase<TCreds>;
-  abstract login(creds: TCreds): Promise<SourceLoginResult<TAuth>>;
+  abstract login(creds: TCreds): Promise<Result<TAuth>>;
+  abstract collect(auth: TAuth): Promise<Result<{ id: string, data: unknown }[]>>;
 }

@@ -1,6 +1,16 @@
 import { dirname, join as joinPath } from "std/path/mod.ts";
+import { SourceAuth } from "../core/models.ts";
 
-export async function save(sourceId: string, auth: unknown) {
+export async function get(sourceId: string): Promise<SourceAuth> {
+  const path = joinPath("credentials", `${sourceId}.json`);
+
+  const decoder = new TextDecoder();
+  const data = decoder.decode(await Deno.readFile(path))
+
+  return JSON.parse(data)
+}
+
+export async function save(sourceId: string, auth: SourceAuth) {
   const path = joinPath("credentials", `${sourceId}.json`);
 
   const encoder = new TextEncoder();

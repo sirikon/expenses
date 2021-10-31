@@ -2,6 +2,7 @@ import { ExContext, ExRouter } from "./models.ts";
 import { sources } from "../sources/_index.ts";
 import { Source } from "../core/models.ts";
 import * as authStore from "../data/authStore.ts";
+import * as transactionStore from "../data/transactionStore.ts";
 
 export default (router: ExRouter) => {
   router.get("/api/v1/sources", (ctx) => {
@@ -23,7 +24,18 @@ export default (router: ExRouter) => {
     const result = await source.login(await creds.value);
     if (result.error != null) return replyBadRequest(ctx, result.error);
 
-    await authStore.save(source.id, result.auth);
+    await authStore.save(source.id, result.data);
+    return replyOK(ctx);
+  });
+
+  router.post("/api/v1/sources/:id/collect", async (ctx) => {
+    const source = getSourceById(ctx.params.id!);
+    if (!source) return replyNotFound(ctx);
+
+    const result = await source.collect(await authStore.get(source.id));
+    if (result.error != null) return replyBadRequest(ctx, result.error);
+
+    await transactionStore.saveTransactionsData(source.id, result.data);
     return replyOK(ctx);
   });
 };

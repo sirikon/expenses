@@ -17,3 +17,8 @@ Content-Type: application/json
     "password": "{{$dotenv SOURCE_PASSWORD}}"
 }
 ###
+
+# @name source_collect
+POST {{host}}/api/v1/sources/{{$dotenv SOURCE_ID}}/collect
+Content-Type: application/json
+###

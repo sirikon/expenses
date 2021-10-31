@@ -20,7 +20,7 @@ export async function saveTransactionsData(
   }
 }
 
-export function saveTransactionIndex(transaction: Transaction) {
+export function saveTransactionIndex(source: string, transaction: Transaction) {
   getIndexDb().query(
     `
       INSERT INTO transactions (id, source, shop, description, amount, timestamp)
@@ -28,7 +28,7 @@ export function saveTransactionIndex(transaction: Transaction) {
     `,
     [
       transaction.id,
-      transaction.source,
+      source,
       transaction.shop,
       transaction.description,
       transaction.amount,
