@@ -1,7 +1,7 @@
 import { ExContext, ExRouter } from "./models.ts";
 import { sources } from "../sources/_index.ts";
 import { Source } from "../core/models.ts";
-import * as authStore from "../core/authStore.ts";
+import * as authStore from "../data/authStore.ts";
 
 export default (router: ExRouter) => {
   router.get("/api/v1/sources", (ctx) => {
