@@ -24,7 +24,7 @@ export type Source = {
   readonly credsScheme: SourceCredsScheme;
 
   login(creds: SourceCreds): Promise<Result<SourceAuth>>;
-  collect(auth: SourceAuth): Promise<Result<{ id: string, data: unknown }[]>>;
+  collect(auth: SourceAuth): Promise<Result<{ id: string; data: unknown }[]>>;
 };
 
 export abstract class SourceBase<
@@ -35,5 +35,7 @@ export abstract class SourceBase<
   abstract name: string;
   abstract credsScheme: SourceCredsSchemeBase<TCreds>;
   abstract login(creds: TCreds): Promise<Result<TAuth>>;
-  abstract collect(auth: TAuth): Promise<Result<{ id: string, data: unknown }[]>>;
+  abstract collect(
+    auth: TAuth,
+  ): Promise<Result<{ id: string; data: unknown }[]>>;
 }

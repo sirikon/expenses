@@ -1,9 +1,5 @@
-import {
-  Result,
-  SourceBase,
-  SourceCredsSchemeBase,
-  Transaction,
-} from "@/core/models.ts";
+// deno-lint-ignore-file no-explicit-any
+import { Result, SourceBase, SourceCredsSchemeBase } from "@/core/models.ts";
 
 const BASE_URL = "https://www.bbva.es/ASO";
 
@@ -25,8 +21,8 @@ export class BBVASource implements SourceBase<BBVACredentials, BBVAAuth> {
     password: "password",
   };
 
-  login = login
-  collect = collect
+  login = login;
+  collect = collect;
 }
 
 async function login(
@@ -65,18 +61,20 @@ async function login(
   }
 }
 
-async function collect(auth: BBVAAuth): Promise<Result<{ id: string, data: unknown }[]>> {
+async function collect(
+  auth: BBVAAuth,
+): Promise<Result<{ id: string; data: unknown }[]>> {
   try {
     const contracts = await getAccountContracts(auth);
     return {
       error: null,
-      data: await getTransactions(auth, contracts)
-    }
+      data: await getTransactions(auth, contracts),
+    };
   } catch (_) {
     return {
       error: "Collection failed",
-      data: null
-    }
+      data: null,
+    };
   }
 }
 
@@ -101,7 +99,7 @@ async function getAccountContracts(auth: BBVAAuth): Promise<string[]> {
 async function getTransactions(
   auth: BBVAAuth,
   contracts: string[],
-): Promise<{ id: string, data: unknown }[]> {
+): Promise<{ id: string; data: unknown }[]> {
   const pageSize = 40;
   let paginationKey = "0";
   const transactions = [];

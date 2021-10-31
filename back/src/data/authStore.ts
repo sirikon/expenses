@@ -7,9 +7,9 @@ export async function get(sourceId: string): Promise<SourceAuth | null> {
   if (!await exists(path)) return null;
 
   const decoder = new TextDecoder();
-  const data = decoder.decode(await Deno.readFile(path))
+  const data = decoder.decode(await Deno.readFile(path));
 
-  return JSON.parse(data)
+  return JSON.parse(data);
 }
 
 export async function save(sourceId: string, auth: SourceAuth) {

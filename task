@@ -16,6 +16,10 @@ def cli():
     @command
     def format_back():
         run(['deno', 'fmt'], cwd='back')
+    
+    @command
+    def lint_back():
+        run(['deno', 'lint'], cwd='back')
 
     @command
     def build():
