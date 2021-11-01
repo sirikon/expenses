@@ -1,5 +1,10 @@
 // deno-lint-ignore-file no-explicit-any
-import { Result, SourceBase, SourceCredsSchemeBase } from "@/core/models.ts";
+import {
+  Result,
+  SourceBase,
+  SourceCredsSchemeBase,
+  Transaction,
+} from "@/core/models.ts";
 
 const BASE_URL = "https://www.bbva.es/ASO";
 
@@ -13,6 +18,17 @@ type BBVAAuth = {
   userId: string;
 };
 
+type BBVARawTransaction = {
+  id: string;
+  name: string;
+  humanConceptName?: string;
+  cardTransactionDetail?: {
+    shop: { name: string };
+  };
+  amount: { amount: number };
+  transactionDate: string;
+};
+
 export class BBVASource implements SourceBase<BBVACredentials, BBVAAuth> {
   readonly id = "bbva";
   readonly name = "BBVA";
@@ -23,6 +39,7 @@ export class BBVASource implements SourceBase<BBVACredentials, BBVAAuth> {
 
   login = login;
   collect = collect;
+  refine = refine;
 }
 
 async function login(
@@ -76,6 +93,17 @@ async function collect(
       data: null,
     };
   }
+}
+
+function refine(data: BBVARawTransaction): Transaction {
+  return {
+    id: data.id,
+    amount: data.amount.amount,
+    description: data.cardTransactionDetail?.shop.name ||
+      data.humanConceptName ||
+      data.name,
+    timestamp: Math.floor(new Date(data.transactionDate).getTime() / 1000),
+  };
 }
 
 async function getAccountContracts(auth: BBVAAuth): Promise<string[]> {

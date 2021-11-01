@@ -38,9 +38,21 @@ export default (router: ExRouter) => {
     const result = await source.collect(auth);
     if (result.error != null) return replyBadRequest(ctx, result.error);
 
-    await transactionStore.saveTransactionsData(source.id, result.data);
+    await transactionStore.saveRawTransactions(source.id, result.data);
     return replyOK(ctx);
   });
+
+  router.post("/api/v1/transactions/populate", async (ctx) => {
+    await transactionStore.resetDb()
+    for(const source of sources) {
+      const transactionIds = await transactionStore.getRawTransactionIds(source.id)
+      for (const transactionId of transactionIds) {
+        const transaction = source.refine(await transactionStore.getRawTransactionData(source.id, transactionId))
+        transactionStore.saveTransaction(source.id, { shop: null, category: null }, transaction)
+      }
+    }
+    return replyOK(ctx);
+  })
 };
 
 function getSourceById(id: string): Source | null {

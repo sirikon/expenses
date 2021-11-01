@@ -21,3 +21,7 @@ Content-Type: application/json
 # @name source_collect
 POST {{host}}/api/v1/sources/{{$dotenv SOURCE_ID}}/collect
 ###
+
+# @name transactions_populate
+POST {{host}}/api/v1/transactions/populate
+###

@@ -1,10 +1,14 @@
 export type Transaction = {
   id: string;
-  shop: string | null;
   description: string;
   amount: number;
   timestamp: number;
 };
+
+export type TransactionLabels = {
+  shop: string | null;
+  category: string | null;
+}
 
 export type SourceCreds = { [key: string]: string };
 export type SourceAuth = Record<string, unknown>;
@@ -25,6 +29,7 @@ export type Source = {
 
   login(creds: SourceCreds): Promise<Result<SourceAuth>>;
   collect(auth: SourceAuth): Promise<Result<{ id: string; data: unknown }[]>>;
+  refine(data: unknown): Transaction;
 };
 
 export abstract class SourceBase<
@@ -38,4 +43,5 @@ export abstract class SourceBase<
   abstract collect(
     auth: TAuth,
   ): Promise<Result<{ id: string; data: unknown }[]>>;
+  abstract refine(data: unknown): Transaction;
 }
