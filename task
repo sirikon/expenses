@@ -7,28 +7,35 @@ def cli():
     @command
     def front_start():
         run(['npm', 'start'], cwd='front')
-    
+
     @command
     def front_install():
         run(['npm', 'install'], cwd='front')
 
     @command
-    def back_start(*args):
+    def back_start():
         makedirs('testing-folder', exist_ok=True)
-        run(['deno', 'run', *deno_flags(), *args], cwd='testing-folder')
+        run(['deno', 'run', *deno_flags()], cwd='testing-folder')
 
     @command
     def back_format():
         run(['deno', 'fmt'], cwd='back')
     
     @command
-    def back_ling():
+    def back_lint():
         run(['deno', 'lint'], cwd='back')
 
     @command
     def build():
-        makedirs('bin', exist_ok=True)
-        run(['deno', 'compile', *deno_flags('--output', 'bin/expenses')])
+        run(['rm', '-rf', getcwd() + '/build'], check=True)
+        makedirs('build', exist_ok=True)
+
+        front_install()
+        run(['npm', 'run', '-s', 'release'], cwd='front', check=True)
+        run(['mv', getcwd() + '/front/dist', getcwd() + '/build/front-static'], check=True)
+
+        back_lint()
+        run(['deno', 'compile', *deno_flags('--output', 'build/expenses')], check=True)
 
     @command
     def install():
