@@ -1,0 +1,33 @@
+body {
+  background-color: lightblue;
+}
+
+#app {
+  max-width: 800px;
+  display: block;
+  margin: auto;
+  background-color: white;
+  padding: 1px 1em;
+}
+
+.loading-overlay {
+  position: fixed;
+  top: 0;
+  right: 0;
+  bottom: 0;
+  left: 0;
+  background-color: rgba(0,0,0,0.3);
+  display: flex;
+  justify-content: center;
+  align-items: center;
+
+  > span {
+    font-size: 2em;
+    color: white;
+    background-color: black;
+    padding: .3em .5em;
+    display: block;
+    opacity: 0.7;
+    margin-bottom: 50vh;
+  }
+}

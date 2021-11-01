@@ -7,6 +7,11 @@ export default async () => {
   const app: ExApp = new Application();
   const router: ExRouter = new Router();
 
+  app.use(async (ctx, next) => {
+    ctx.response.headers.set('Access-Control-Allow-Origin', '*');
+    ctx.response.headers.set('Access-Control-Allow-Headers', '*');
+    await next();
+  });
   routes(router);
   app.use(router.routes());
   app.use(router.allowedMethods());

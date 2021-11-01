@@ -5,20 +5,24 @@ from subprocess import run
 def cli():
 
     @command
-    def start_front():
+    def front_start():
         run(['npm', 'start'], cwd='front')
+    
+    @command
+    def front_install():
+        run(['npm', 'install'], cwd='front')
 
     @command
-    def start_back(*args):
+    def back_start(*args):
         makedirs('testing-folder', exist_ok=True)
         run(['deno', 'run', *deno_flags(), *args], cwd='testing-folder')
 
     @command
-    def format_back():
+    def back_format():
         run(['deno', 'fmt'], cwd='back')
     
     @command
-    def lint_back():
+    def back_ling():
         run(['deno', 'lint'], cwd='back')
 
     @command
