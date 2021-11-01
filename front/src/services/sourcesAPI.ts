@@ -1,13 +1,10 @@
-import { Source } from "../core/models";
+import { Source, Response } from "../core/models";
 
-type Response<Status extends number, Body> = {
-  status: Status,
-  json: () => Promise<Body>
-}
+export type GetSourcesResponse =
+  | Response<200, Source[]>
 
-export async function getSources(): Promise<Source[]> {
-  return fetch(url("/api/v1/sources"))
-    .then(r => r.json())
+export async function getSources(): Promise<GetSourcesResponse> {
+  return (await fetch(url("/api/v1/sources"))) as GetSourcesResponse;
 }
 
 
