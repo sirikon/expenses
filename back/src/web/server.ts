@@ -19,6 +19,10 @@ export default async () => {
   const frontStaticAssets = Deno.env.get("FRONT_STATIC_ASSETS")
   if (frontStaticAssets != null) {
     app.use(async (ctx) => {
+      if (ctx.request.url.pathname === "/favicon.ico") {
+        ctx.response.status = 404
+        return
+      }
       await send(ctx, ctx.request.url.pathname, {
         root: frontStaticAssets,
         index: "index.html",
