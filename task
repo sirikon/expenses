@@ -39,7 +39,16 @@ def cli():
 
     @command
     def install():
-        run(['cp', './bin/expenses', '/usr/local/bin/expenses'])
+        run(['rm', '-f', '/usr/local/bin/expenses'])
+        with open('/usr/local/bin/expenses', 'w') as file:
+            file.write('\n'.join([
+                '#!/usr/bin/env bash',
+                'set -euo pipefail',
+                'export FRONT_STATIC_ASSETS=' + path.join(getcwd(), 'build', 'front-static'),
+                path.join(getcwd(), 'build', 'expenses'),
+                ''
+            ]))
+        run(['chmod', '+x', '/usr/local/bin/expenses'], check=True)
 
     def deno_flags(*args):
         return [
