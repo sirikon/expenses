@@ -64,14 +64,8 @@ const useSources = () => {
   const [sources, setSources] = useState<Source[]>([])
 
   useEffect(() => {
-    (async () => {
-      const response = await sourcesAPI.getSources()
-      if (response.status !== 200) {
-        alert("Unexpected error while getting sources")
-        return
-      }
-      setSources(response.body)
-    })()
+    sourcesAPI.getSources()
+      .then(r => setSources(r.body));
   }, [])
 
   return sources;

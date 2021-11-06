@@ -3,10 +3,7 @@ import { SourceModel } from "../core/models"
 import { response, request } from "../utils/api"
 
 export const getSources = () =>
-  request(union([
-    response(200, array(SourceModel)),
-    response(400, unknown())
-  ]), "GET", "/api/v1/sources")
+  request(response(200, array(SourceModel)), "GET", "/api/v1/sources")
 
 export const login = (sourceId: string, data: unknown) =>
   request(union([
