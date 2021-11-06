@@ -8,20 +8,20 @@ export default async () => {
   const router: ExRouter = new Router();
 
   app.use(async (ctx, next) => {
-    ctx.response.headers.set('Access-Control-Allow-Origin', '*');
-    ctx.response.headers.set('Access-Control-Allow-Headers', '*');
+    ctx.response.headers.set("Access-Control-Allow-Origin", "*");
+    ctx.response.headers.set("Access-Control-Allow-Headers", "*");
     await next();
   });
   routes(router);
   app.use(router.routes());
   app.use(router.allowedMethods());
 
-  const frontStaticAssets = Deno.env.get("FRONT_STATIC_ASSETS")
+  const frontStaticAssets = Deno.env.get("FRONT_STATIC_ASSETS");
   if (frontStaticAssets != null) {
     app.use(async (ctx) => {
       if (ctx.request.url.pathname === "/favicon.ico") {
-        ctx.response.status = 404
-        return
+        ctx.response.status = 404;
+        return;
       }
       await send(ctx, ctx.request.url.pathname, {
         root: frontStaticAssets,

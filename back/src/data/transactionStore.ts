@@ -33,14 +33,21 @@ export async function getRawTransactionIds(source: string): Promise<string[]> {
   return result;
 }
 
-export async function getRawTransactionData(source: string, id: string): Promise<unknown> {
+export async function getRawTransactionData(
+  source: string,
+  id: string,
+): Promise<unknown> {
   const filePath = joinPath(RAW_TRANSACTIONS_FOLDER, source, id + ".json");
   const decoder = new TextDecoder();
   const data = decoder.decode(await Deno.readFile(filePath));
   return JSON.parse(data);
 }
 
-export function saveTransaction(source: string, labels: TransactionLabels, transaction: Transaction) {
+export function saveTransaction(
+  source: string,
+  labels: TransactionLabels,
+  transaction: Transaction,
+) {
   getDb().query(
     `
       INSERT INTO transactions (source, shop, category, id, description, amount, timestamp)

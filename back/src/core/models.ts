@@ -8,7 +8,7 @@ export type Transaction = {
 export type TransactionLabels = {
   shop: string | null;
   category: string | null;
-}
+};
 
 export type SourceCreds = { [key: string]: string };
 export type SourceAuth = Record<string, unknown>;

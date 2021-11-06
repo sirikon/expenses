@@ -43,16 +43,26 @@ export default (router: ExRouter) => {
   });
 
   router.post("/api/v1/transactions/populate", async (ctx) => {
-    await transactionStore.resetDb()
-    for(const source of sources) {
-      const transactionIds = await transactionStore.getRawTransactionIds(source.id)
+    await transactionStore.resetDb();
+    for (const source of sources) {
+      const transactionIds = await transactionStore.getRawTransactionIds(
+        source.id,
+      );
       for (const transactionId of transactionIds) {
-        const transaction = source.refine(await transactionStore.getRawTransactionData(source.id, transactionId))
-        transactionStore.saveTransaction(source.id, { shop: null, category: null }, transaction)
+        const transaction = source.refine(
+          await transactionStore.getRawTransactionData(
+            source.id,
+            transactionId,
+          ),
+        );
+        transactionStore.saveTransaction(source.id, {
+          shop: null,
+          category: null,
+        }, transaction);
       }
     }
     return replyOK(ctx);
-  })
+  });
 };
 
 function getSourceById(id: string): Source | null {
