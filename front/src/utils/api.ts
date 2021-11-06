@@ -19,11 +19,12 @@ export const request = async <T>(struct: Struct<T>, method: "GET" | "POST", url:
   const unsafeResponse = {
     status: fetchResponse.status,
     body: await fetchResponse.json()
+      .catch(_ => null)
   }
 
   const [err, response] = validate(unsafeResponse, struct)
   if (err != null) {
-    console.log(JSON.stringify(err.failures(), null, 2));
+    console.log("Failures", err.failures());
     throw err;
   }
   return response as T;

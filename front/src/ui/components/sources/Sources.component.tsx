@@ -33,10 +33,19 @@ export default () => {
 
   const collect = async (s: Source) => {
     const result = await whileLoading("Collecting...",
-      () => sourcesAPI.collect(s.id))
-    if (result.status !== 200) {
-      alert("Unexpected error")
+      () => sourcesAPI.collect(s.id));
+
+    if (result.status === 200) {
+      alert("Collected")
+      return
     }
+
+    if (result.status === 400) {
+      alert(result.body.message)
+      return
+    }
+
+    assertUnreachable(result)
   }
 
   return <>

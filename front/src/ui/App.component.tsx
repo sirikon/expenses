@@ -11,14 +11,19 @@ export default () => {
 
   return <>
     <LoadingContext.Provider value={{ setLoading }}>
-      <h1>Expenses</h1>
-      <Sources />
-      <Transactions />
+      <h1 className="header">
+        <span>Expenses</span>
+        <img src="/favicon.svg" alt="" />
+      </h1>
+
+      <div className="content">
+        <Sources />
+        <Transactions />
+      </div>
 
       {loading != null && <div className="loading-overlay">
         <span>{loading}</span>
       </div>}
-
     </LoadingContext.Provider>
   </>;
 };

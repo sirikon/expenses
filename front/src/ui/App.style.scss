@@ -1,13 +1,14 @@
 body {
-  background-color: lightblue;
+  background-color: lightskyblue;
+  font-family: Verdana, Geneva, Tahoma, sans-serif;
+  margin: 0;
 }
 
 #app {
-  max-width: 800px;
+  max-width: 1200px;
   display: block;
   margin: auto;
-  background-color: white;
-  padding: 1px 1em;
+  padding: 0 1em;
 }
 
 .loading-overlay {
@@ -30,4 +31,24 @@ body {
     opacity: 0.7;
     margin-bottom: 50vh;
   }
+}
+
+.header {
+  display: flex;
+  justify-content: center;
+  align-items: center;
+
+  span {
+    font-weight: normal;
+  }
+
+  img {
+    max-width: 1.3em;
+    margin-left: .2em;
+  }
+}
+
+.content {
+  background-color: white;
+  padding: 1px 1em;
 }
