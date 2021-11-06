@@ -19,7 +19,7 @@ export const request = async <T>(struct: Struct<T>, method: "GET" | "POST", url:
   const unsafeResponse = {
     status: fetchResponse.status,
     body: await fetchResponse.json()
-      .catch(_ => null)
+      .catch(() => null)
   }
 
   const [err, response] = validate(unsafeResponse, struct)
