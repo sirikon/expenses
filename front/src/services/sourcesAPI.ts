@@ -1,37 +1,37 @@
-import { Source, Response } from "../core/models";
+import { array, object, string, union, unknown, Describe, record, literal } from "superstruct"
+import { Source } from "../core/models"
+import { response, request } from "../utils/api"
 
-export type GetSourcesResponse =
-  | Response<200, Source[]>
+const SourceModel: Describe<Source> = object({
+  id: string(),
+  name: string(),
+  credsScheme: record(string(), union([
+    literal("text"),
+    literal("password")
+  ]))
+})
 
-export async function getSources(): Promise<GetSourcesResponse> {
-  return (await fetch(url("/api/v1/sources"))) as GetSourcesResponse;
-}
+const GetSourcesResponseModel = union([
+  response(200, array(SourceModel)),
+  response(400, unknown())
+])
 
-
-export type LoginResponse =
-  | Response<200, unknown>
-  | Response<400, { message: string }>
-
-export async function login(sourceId: string, data: unknown): Promise<LoginResponse> {
-  return (await fetch(url(`/api/v1/sources/${sourceId}/login`), {
-    method: "POST",
-    headers: {
-      "Content-Type": "application/json"
-    },
-    body: JSON.stringify(data)
-  })) as LoginResponse
-}
+export const getSources = () =>
+  request(GetSourcesResponseModel, "GET", "/api/v1/sources")
 
 
-export type CollectResponse =
-  | Response<200, unknown>
 
-export async function collect(sourceId: string): Promise<CollectResponse> {
-  return (await fetch(url(`/api/v1/sources/${sourceId}/collect`), {
-    method: "POST"
-  })) as CollectResponse
-}
+const LoginResponseModel = union([
+  response(200, unknown()),
+  response(400, object({ message: string() }))
+])
 
-function url(path: string): string {
-  return `${EXPENSES_BASE_URL}${path}`;
-}
+export const login = (sourceId: string, data: unknown) =>
+  request(LoginResponseModel, "POST", `/api/v1/sources/${sourceId}/login`, data)
+
+
+
+const CollectResponseModel = response(200, unknown())
+
+export const collect = (sourceId: string) =>
+  request(CollectResponseModel, "POST", `/api/v1/sources/${sourceId}/collect`)
