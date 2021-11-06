@@ -1,37 +1,18 @@
-import { array, object, string, union, unknown, Describe, record, literal } from "superstruct"
-import { Source } from "../core/models"
+import { array, object, string, union, unknown } from "superstruct"
+import { SourceModel } from "../core/models"
 import { response, request } from "../utils/api"
 
-const SourceModel: Describe<Source> = object({
-  id: string(),
-  name: string(),
-  credsScheme: record(string(), union([
-    literal("text"),
-    literal("password")
-  ]))
-})
-
-const GetSourcesResponseModel = union([
-  response(200, array(SourceModel)),
-  response(400, unknown())
-])
-
 export const getSources = () =>
-  request(GetSourcesResponseModel, "GET", "/api/v1/sources")
-
-
-
-const LoginResponseModel = union([
-  response(200, unknown()),
-  response(400, object({ message: string() }))
-])
+  request(union([
+    response(200, array(SourceModel)),
+    response(400, unknown())
+  ]), "GET", "/api/v1/sources")
 
 export const login = (sourceId: string, data: unknown) =>
-  request(LoginResponseModel, "POST", `/api/v1/sources/${sourceId}/login`, data)
-
-
-
-const CollectResponseModel = response(200, unknown())
+  request(union([
+    response(200, unknown()),
+    response(400, object({ message: string() }))
+  ]), "POST", `/api/v1/sources/${sourceId}/login`, data)
 
 export const collect = (sourceId: string) =>
-  request(CollectResponseModel, "POST", `/api/v1/sources/${sourceId}/collect`)
+  request(response(200, unknown()), "POST", `/api/v1/sources/${sourceId}/collect`)

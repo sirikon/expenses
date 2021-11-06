@@ -1,2 +1,2 @@
 // eslint-disable-next-line @typescript-eslint/no-unused-vars
-export default (a: never) => { /**/}
+export default (a: never) => { /**/ }
