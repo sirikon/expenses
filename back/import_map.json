@@ -1,8 +1,8 @@
 {
   "imports": {
     "@/": "./src/",
-    "std/": "https://deno.land/std@0.112.0/",
-    "sqlite/": "https://deno.land/x/sqlite@v3.1.1/",
-    "oak/": "https://deno.land/x/oak@v9.0.1/"
+    "std/": "https://deno.land/std@0.120.0/",
+    "sqlite/": "https://deno.land/x/sqlite@v3.2.0/",
+    "oak/": "https://deno.land/x/oak@v10.1.0/"
   }
 }

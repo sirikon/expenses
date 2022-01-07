@@ -1,10 +1,10 @@
-import { ExContext, ExRouter } from "./models.ts";
 import { sources } from "../sources/_index.ts";
 import { Source } from "../core/models.ts";
 import * as authStore from "../data/authStore.ts";
 import * as transactionStore from "../data/transactionStore.ts";
+import { Response, Router } from "oak/mod.ts";
 
-export default (router: ExRouter) => {
+export default (router: Router) => {
   router.get("/api/v1/sources", (ctx) => {
     ctx.response.body = sources;
   });
@@ -70,16 +70,16 @@ function getSourceById(id: string): Source | null {
   return matchingSources.length > 0 ? matchingSources[0] : null;
 }
 
-function replyOK(ctx: ExContext, body?: Record<string, unknown>) {
+function replyOK(ctx: { response: Response }, body?: Record<string, unknown>) {
   ctx.response.status = 200;
   ctx.response.body = body;
 }
 
-function replyNotFound(ctx: ExContext) {
+function replyNotFound(ctx: { response: Response }) {
   ctx.response.status = 404;
 }
 
-function replyBadRequest(ctx: ExContext, message?: string) {
+function replyBadRequest(ctx: { response: Response }, message?: string) {
   ctx.response.status = 400;
   ctx.response.body = { message };
 }

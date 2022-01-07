@@ -1,11 +1,10 @@
 import { Application, Router, send } from "oak/mod.ts";
 import { ApplicationListenEvent } from "oak/application.ts";
-import { ExApp, ExRouter } from "./models.ts";
 import routes from "./routes.ts";
 
 export default async () => {
-  const app: ExApp = new Application();
-  const router: ExRouter = new Router();
+  const app = new Application();
+  const router = new Router();
 
   app.use(async (ctx, next) => {
     ctx.response.headers.set("Access-Control-Allow-Origin", "*");
