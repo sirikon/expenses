@@ -27,5 +27,5 @@ export const request = async <T>(struct: Struct<T>, method: "GET" | "POST", url:
     console.log("Failures", err.failures());
     throw err;
   }
-  return response as T;
+  return response;
 }
