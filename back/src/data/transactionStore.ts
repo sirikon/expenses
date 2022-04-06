@@ -98,7 +98,7 @@ function createDbSchema() {
       description TEXT,
       amount INTEGER,
       timestamp INTEGER,
-      source TEXT
+      data TEXT
     )
   `);
 }
