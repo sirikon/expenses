@@ -3,6 +3,7 @@ export type Transaction = {
   description: string;
   amount: number;
   timestamp: number;
+  data: unknown;
 };
 
 export type TransactionLabels = {

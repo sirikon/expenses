@@ -105,6 +105,7 @@ function refine(data: BBVARawTransaction): Transaction {
         `${data.humanConceptName}: ${data.humanExtendedConceptName}`) ||
       data.name,
     timestamp: Math.floor(new Date(data.transactionDate).getTime() / 1000),
+    data,
   };
 }
 

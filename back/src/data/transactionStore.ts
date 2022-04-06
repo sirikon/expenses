@@ -50,8 +50,8 @@ export function saveTransaction(
 ) {
   getDb().query(
     `
-      INSERT INTO transactions (source, shop, category, id, description, amount, timestamp)
-      VALUES (?, ?, ?, ?, ?, ?, ?)
+      INSERT INTO transactions (source, shop, category, id, description, amount, timestamp, data)
+      VALUES (?, ?, ?, ?, ?, ?, ?, ?)
     `,
     [
       source,
@@ -61,6 +61,7 @@ export function saveTransaction(
       transaction.description,
       transaction.amount,
       transaction.timestamp,
+      JSON.stringify(transaction.data),
     ],
   );
 }
@@ -96,7 +97,8 @@ function createDbSchema() {
       id TEXT,
       description TEXT,
       amount INTEGER,
-      timestamp INTEGER
+      timestamp INTEGER,
+      source TEXT
     )
   `);
 }
