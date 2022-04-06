@@ -64,7 +64,8 @@ def cli():
             *DENO_CONF_FLAGS,
             *DENO_PERM_FLAGS,
             *DENO_EXEC_FLAGS,
-            '--output', 'build/expenses')
+            '--output', 'build/expenses',
+            DENO_ENTRY_FILE)
 
     @command
     def install():
