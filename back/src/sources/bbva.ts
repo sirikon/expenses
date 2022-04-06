@@ -22,6 +22,7 @@ type BBVARawTransaction = {
   id: string;
   name: string;
   humanConceptName?: string;
+  humanExtendedConceptName?: string;
   cardTransactionDetail?: {
     shop: { name: string };
   };
@@ -100,7 +101,8 @@ function refine(data: BBVARawTransaction): Transaction {
     id: data.id,
     amount: data.amount.amount,
     description: data.cardTransactionDetail?.shop.name ||
-      data.humanConceptName ||
+      (data.humanConceptName &&
+        `${data.humanConceptName}: ${data.humanExtendedConceptName}`) ||
       data.name,
     timestamp: Math.floor(new Date(data.transactionDate).getTime() / 1000),
   };
