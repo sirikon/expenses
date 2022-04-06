@@ -8,11 +8,11 @@ export const getSources = () =>
 export const login = (sourceId: string, data: unknown) =>
   request(union([
     response(200, unknown()),
-    response(400, object({ message: string() }))
+    response(500, object({ message: string() }))
   ]), "POST", `/api/v1/sources/${sourceId}/login`, data)
 
 export const collect = (sourceId: string) =>
   request(union([
     response(200, unknown()),
-    response(400, object({ message: string() }))
+    response(500, object({ message: string() }))
   ]), "POST", `/api/v1/sources/${sourceId}/collect`)

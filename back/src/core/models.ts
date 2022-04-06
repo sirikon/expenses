@@ -19,17 +19,14 @@ export type SourceCredsScheme = { [key: string]: SourceCredsSchemeValues };
 export type SourceCredsSchemeBase<TCreds extends SourceCreds> = {
   [key in keyof TCreds]: SourceCredsSchemeValues;
 };
-export type Result<T> =
-  | { error: null; data: T }
-  | { error: string; data: null };
 
 export type Source = {
   readonly id: string;
   readonly name: string;
   readonly credsScheme: SourceCredsScheme;
 
-  login(creds: SourceCreds): Promise<Result<SourceAuth>>;
-  collect(auth: SourceAuth): Promise<Result<{ id: string; data: unknown }[]>>;
+  login(creds: SourceCreds): Promise<SourceAuth>;
+  collect(auth: SourceAuth): Promise<{ id: string; data: unknown }[]>;
   refine(data: unknown): Transaction | null;
 };
 
@@ -40,9 +37,9 @@ export abstract class SourceBase<
   abstract id: string;
   abstract name: string;
   abstract credsScheme: SourceCredsSchemeBase<TCreds>;
-  abstract login(creds: TCreds): Promise<Result<TAuth>>;
+  abstract login(creds: TCreds): Promise<TAuth>;
   abstract collect(
     auth: TAuth,
-  ): Promise<Result<{ id: string; data: unknown }[]>>;
+  ): Promise<{ id: string; data: unknown }[]>;
   abstract refine(data: unknown): Transaction | null;
 }

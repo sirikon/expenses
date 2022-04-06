@@ -7,6 +7,16 @@ export default async () => {
   const router = new Router();
 
   app.use(async (ctx, next) => {
+    try {
+      await next();
+    } catch (err: unknown) {
+      const message = err instanceof Error ? err.message : "Unexpected error";
+      ctx.response.status = 500;
+      ctx.response.body = { message };
+    }
+  });
+
+  app.use(async (ctx, next) => {
     ctx.response.headers.set("Access-Control-Allow-Origin", "*");
     ctx.response.headers.set("Access-Control-Allow-Headers", "*");
     await next();

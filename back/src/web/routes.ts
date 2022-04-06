@@ -22,9 +22,7 @@ export default (router: Router) => {
     if (creds.type !== "json") return replyBadRequest(ctx);
 
     const result = await source.login(await creds.value);
-    if (result.error != null) return replyBadRequest(ctx, result.error);
-
-    await authStore.save(source.id, result.data);
+    await authStore.save(source.id, result);
     return replyOK(ctx);
   });
 
@@ -36,9 +34,8 @@ export default (router: Router) => {
     if (auth == null) return replyBadRequest(ctx, "Not logged in");
 
     const result = await source.collect(auth);
-    if (result.error != null) return replyBadRequest(ctx, result.error);
 
-    await transactionStore.saveRawTransactions(source.id, result.data);
+    await transactionStore.saveRawTransactions(source.id, result);
     return replyOK(ctx);
   });
 

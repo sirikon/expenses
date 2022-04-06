@@ -23,7 +23,7 @@ export default () => {
       return
     }
 
-    if (result.status === 400) {
+    if (result.status === 500) {
       alert(result.body.message)
       return
     }
@@ -40,7 +40,7 @@ export default () => {
       return
     }
 
-    if (result.status === 400) {
+    if (result.status === 500) {
       alert(result.body.message)
       return
     }
