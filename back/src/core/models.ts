@@ -30,7 +30,7 @@ export type Source = {
 
   login(creds: SourceCreds): Promise<Result<SourceAuth>>;
   collect(auth: SourceAuth): Promise<Result<{ id: string; data: unknown }[]>>;
-  refine(data: unknown): Transaction;
+  refine(data: unknown): Transaction | null;
 };
 
 export abstract class SourceBase<
@@ -44,5 +44,5 @@ export abstract class SourceBase<
   abstract collect(
     auth: TAuth,
   ): Promise<Result<{ id: string; data: unknown }[]>>;
-  abstract refine(data: unknown): Transaction;
+  abstract refine(data: unknown): Transaction | null;
 }

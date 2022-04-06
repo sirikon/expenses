@@ -23,6 +23,12 @@ type BBVARawTransaction = {
   name: string;
   humanConceptName?: string;
   humanExtendedConceptName?: string;
+  scheme: {
+    category: {
+      id: string;
+      name: string;
+    };
+  };
   cardTransactionDetail?: {
     shop: { name: string };
   };
@@ -96,7 +102,14 @@ async function collect(
   }
 }
 
-function refine(data: BBVARawTransaction): Transaction {
+function refine(data: BBVARawTransaction): Transaction | null {
+  if (
+    data.scheme.category.id === "0067" ||
+    data.scheme.category.id === "0153"
+  ) { // Transfer between accounts
+    return null;
+  }
+
   return {
     id: data.id,
     amount: data.amount.amount,

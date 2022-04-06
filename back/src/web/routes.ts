@@ -55,6 +55,7 @@ export default (router: Router) => {
             transactionId,
           ),
         );
+        if (transaction == null) continue;
         transactionStore.saveTransaction(source.id, {
           shop: null,
           category: null,
