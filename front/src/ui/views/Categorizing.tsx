@@ -1,13 +1,15 @@
 import React, { useEffect, useState } from "react"
 import { Categorization, Transaction } from "../../core/models";
-import { useMutableState } from "../hooks/useMutableState";
 import * as categorizationAPI from "../../services/categorizationAPI"
 import * as transactionsAPI from "../../services/transactionsAPI"
 
 export default () => {
-  const state = useMutableState<{ categorization: Categorization }>({categorization: []})
+  const [, setIter] = useState(0)
+  const [state] = useState<{ categorization: Categorization }>({categorization: []})
   const [transactions, setTransactions] = useState<Transaction[]>([])
   const [selectedTransaction, setSelectedTransaction] = useState<Transaction | null>(null)
+
+  const render = () => setIter(s => s+1)
 
   const saveCategorization = async () => {
     await categorizationAPI.setCategorization(state.categorization)
@@ -32,23 +34,23 @@ export default () => {
       <div className="half split-vertical">
         <div style={{maxHeight: 400, overflow: "scroll"}}>
           {state.categorization.map((c, ci) => <p>
-            <input type="text" value={c.categoryName} onChange={(e) => c.categoryName = e.target.value} />
-            <button onClick={() => state.categorization.splice(ci, 1)}>-</button>
+            <input type="text" value={c.categoryName} onChange={(e) => (c.categoryName = e.target.value, render())} />
+            <button onClick={() => (state.categorization.splice(ci, 1), render())}>-</button>
             <ul>
               {c.matchers.map(((m, mi) => <li>
-                <input type="text" value={m.query} onChange={(e) => m.query = e.target.value} />
-                <select value={m.condition} onChange={(e) => m.condition = e.target.value === "equals" ? "equals" : "like"}>
+                <input type="text" value={m.query} onChange={(e) => (m.query = e.target.value, render())} />
+                <select value={m.condition} onChange={(e) => (m.condition = e.target.value === "equals" ? "equals" : "like", render())}>
                   <option value="equals">equals</option>
                   <option value="like">like</option>
                 </select>
-                <input type="text" value={m.value} onChange={(e) => m.value = e.target.value} />
-                <button onClick={() => c.matchers.splice(mi, 1)}>-</button>
+                <input type="text" value={m.value} onChange={(e) => (m.value = e.target.value, render())} />
+                <button onClick={() => (c.matchers.splice(mi, 1), render())}>-</button>
               </li>))}
-              <button onClick={() => c.matchers.push({ query: "", condition: "equals", value: "" })}>Add matcher</button>
+              <button onClick={() => (c.matchers.push({ query: "", condition: "equals", value: "" }), render())}>Add matcher</button>
             </ul>
           </p>)}
           <p>
-            <button onClick={() => state.categorization.push({ categoryName: "", matchers: [] })}>Add category</button>
+            <button onClick={() => (state.categorization.push({ categoryName: "", matchers: [] }), render())}>Add category</button>
           </p>
         </div>
         <div style={{maxHeight: 400, overflow: "scroll"}}>

@@ -1,4 +1,4 @@
-import { array, Infer, literal, number, object, optional, record, string, union, unknown, nullable } from "superstruct"
+import { array, Infer, literal, number, object, record, string, union, unknown, nullable } from "superstruct"
 
 export const SourceModel = object({
   id: string(),
