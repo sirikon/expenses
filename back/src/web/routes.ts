@@ -54,6 +54,14 @@ export default (router: Router) => {
     return replyOK(ctx);
   });
 
+  router.get("/api/v1/transactions", async (ctx) => {
+    const categorization = await categorizationStore.get();
+    return replyOK(
+      ctx,
+      transactionStore.queryTransactions(categorization),
+    );
+  });
+
   router.post("/api/v1/transactions/populate", async (ctx) => {
     await transactionStore.resetDb();
     for (const source of sources) {
@@ -68,10 +76,7 @@ export default (router: Router) => {
           ),
         );
         if (transaction == null) continue;
-        transactionStore.saveTransaction(source.id, {
-          shop: null,
-          category: null,
-        }, transaction);
+        transactionStore.saveTransaction(source.id, transaction);
       }
     }
     return replyOK(ctx);

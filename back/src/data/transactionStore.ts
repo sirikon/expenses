@@ -2,7 +2,11 @@ import { ensureDir, exists } from "std/fs/mod.ts";
 import { join as joinPath } from "std/path/mod.ts";
 import { DB } from "sqlite/mod.ts";
 
-import { Transaction, TransactionLabels } from "../core/models.ts";
+import {
+  Categorization,
+  CategorizedTransaction,
+  Transaction,
+} from "../core/models.ts";
 
 const RAW_TRANSACTIONS_FOLDER = "raw_transactions";
 const DB_FILE = "./transactions.db";
@@ -45,18 +49,15 @@ export async function getRawTransactionData(
 
 export function saveTransaction(
   source: string,
-  labels: TransactionLabels,
   transaction: Transaction,
 ) {
   getDb().query(
     `
-      INSERT INTO transactions (source, shop, category, id, description, amount, timestamp, data)
-      VALUES (?, ?, ?, ?, ?, ?, ?, ?)
+      INSERT INTO transactions (source, id, description, amount, timestamp, data)
+      VALUES (?, ?, ?, ?, ?, ?)
     `,
     [
       source,
-      labels.shop,
-      labels.category,
       transaction.id,
       transaction.description,
       transaction.amount,
@@ -64,6 +65,47 @@ export function saveTransaction(
       JSON.stringify(transaction.data),
     ],
   );
+}
+
+export function queryTransactions(categorization: Categorization) {
+  const caseLines: string[] = [];
+  const placeholders: string[] = [];
+
+  for (const c of categorization) {
+    for (const m of c.matchers) {
+      caseLines.push(
+        `WHEN json_extract("data", ?) ${
+          m.condition === "equals" ? "=" : "LIKE"
+        } ? THEN ?`,
+      );
+      placeholders.push(m.query, m.value, c.categoryName);
+    }
+  }
+
+  const categorySection = caseLines.length > 0
+    ? `
+    CASE
+      ${caseLines.join("\n")}
+    END as category
+  `
+    : "null as category";
+
+  const query = `
+    SELECT
+      id, description, amount, timestamp, data,
+      ${categorySection}
+    FROM transactions
+    ORDER BY "timestamp" desc
+  `;
+
+  return getDb().query(query, placeholders).map((r) => ({
+    id: r[0],
+    description: r[1],
+    amount: r[2],
+    timestamp: r[3],
+    data: JSON.parse(r[4] as string),
+    category: r[5],
+  } as CategorizedTransaction));
 }
 
 export async function resetDb() {
@@ -92,8 +134,6 @@ function createDbSchema() {
   getDb().query(`
     CREATE TABLE transactions (
       source TEXT,
-      shop TEXT NULL,
-      category TEXT NULL,
       id TEXT,
       description TEXT,
       amount INTEGER,

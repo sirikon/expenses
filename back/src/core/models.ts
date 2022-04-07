@@ -5,9 +5,7 @@ export type Transaction = {
   timestamp: number;
   data: unknown;
 };
-
-export type TransactionLabels = {
-  shop: string | null;
+export type CategorizedTransaction = Transaction & {
   category: string | null;
 };
 
