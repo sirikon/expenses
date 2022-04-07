@@ -1,6 +1,6 @@
 import React from "react"
-import useLoading from "../../hooks/useLoading"
 import * as transactionsAPI from "../../../services/transactionsAPI"
+import { useLoading } from "../../stores/loading"
 
 export default () => {
 

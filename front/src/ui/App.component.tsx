@@ -1,29 +1,39 @@
 import "./App.style.scss"
-import React, { useState } from "react";
+import React from "react";
+import { HashRouter, NavLink, Navigate, Route, Routes } from "react-router-dom"
 
-import Sources from "./components/sources/Sources.component"
-import Transactions from "./components/transactions/Transactions.component"
+import Collecting from "./views/Collecting";
+import Categorizing from "./views/Categorizing";
 
-import { LoadingContext } from "./contexts/loadingContext";
+import { useLoadingStore } from "./stores/loading"
 
 export default () => {
-  const [loading, setLoading] = useState<string | null>(null)
+  const loading = useLoadingStore((s) => s.loading)
 
   return <>
-    <LoadingContext.Provider value={{ setLoading }}>
-      <h1 className="header">
-        <span>Expenses</span>
-        <img src="/favicon.svg" alt="" />
-      </h1>
+    <HashRouter>
+      <div className="header">
+        <h1 className="title">
+          <span>Expenses</span>
+          <img src="/favicon.svg" alt="" />
+        </h1>
+        <div className="menu">
+          <NavLink className="menu-link" to="/collecting">Collecting</NavLink>
+          <NavLink className="menu-link" to="/categorizing">Categorizing</NavLink>
+        </div>
+      </div>
 
       <div className="content">
-        <Sources />
-        <Transactions />
+        <Routes>
+          <Route path="/" element={<Navigate to="/collecting" replace />} />
+          <Route path="/collecting" element={<Collecting />} />
+          <Route path="/categorizing" element={<Categorizing />} />
+        </Routes>
       </div>
 
       {loading != null && <div className="loading-overlay">
         <span>{loading}</span>
       </div>}
-    </LoadingContext.Provider>
+    </HashRouter>
   </>;
 };

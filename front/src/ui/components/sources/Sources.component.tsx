@@ -2,7 +2,7 @@ import React, { useState, useEffect } from "react"
 import { Source } from "../../../core/models"
 import * as sourcesAPI from "../../../services/sourcesAPI"
 import assertUnreachable from "../../../utils/assertUnreachable";
-import useLoading from "../../hooks/useLoading";
+import { useLoading } from "../../stores/loading";
 
 export default () => {
   const sources = useSources();
