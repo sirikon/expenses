@@ -1,7 +1,8 @@
 import { sources } from "../sources/_index.ts";
-import { Source } from "../core/models.ts";
+import { Categorization, Source } from "../core/models.ts";
 import * as authStore from "../data/authStore.ts";
 import * as transactionStore from "../data/transactionStore.ts";
+import * as categorizationStore from "../data/categorizationStore.ts";
 import { Response, Router } from "oak/mod.ts";
 
 export default (router: Router) => {
@@ -39,6 +40,20 @@ export default (router: Router) => {
     return replyOK(ctx);
   });
 
+  router.get("/api/v1/categorization", async (ctx) => {
+    return replyOK(ctx, await categorizationStore.get());
+  });
+
+  router.post("/api/v1/categorization", async (ctx) => {
+    const categorization = ctx.request.body();
+    if (categorization.type !== "json") return replyBadRequest(ctx);
+
+    await categorizationStore.save(
+      (await categorization.value) as unknown as Categorization,
+    );
+    return replyOK(ctx);
+  });
+
   router.post("/api/v1/transactions/populate", async (ctx) => {
     await transactionStore.resetDb();
     for (const source of sources) {
@@ -68,7 +83,8 @@ function getSourceById(id: string): Source | null {
   return matchingSources.length > 0 ? matchingSources[0] : null;
 }
 
-function replyOK(ctx: { response: Response }, body?: Record<string, unknown>) {
+// deno-lint-ignore ban-types
+function replyOK(ctx: { response: Response }, body?: object) {
   ctx.response.status = 200;
   ctx.response.body = body;
 }

@@ -43,3 +43,12 @@ export abstract class SourceBase<
   ): Promise<{ id: string; data: unknown }[]>;
   abstract refine(data: unknown): Transaction | null;
 }
+
+export type Categorization = {
+  categoryName: string;
+  matchers: {
+    query: string;
+    condition: "equals" | "like";
+    value: string;
+  }[];
+}[];
