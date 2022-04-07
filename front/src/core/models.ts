@@ -1,4 +1,4 @@
-import { array, Infer, literal, object, record, string, union } from "superstruct"
+import { array, Infer, literal, number, object, optional, record, string, union, unknown, nullable } from "superstruct"
 
 export const SourceModel = object({
   id: string(),
@@ -9,6 +9,16 @@ export const SourceModel = object({
   ]))
 })
 export type Source = Infer<typeof SourceModel>
+
+export const TransactionModel = object({
+  id: string(),
+  description: string(),
+  amount: number(),
+  timestamp: number(),
+  data: unknown(),
+  category: nullable(string())
+})
+export type Transaction = Infer<typeof TransactionModel>
 
 export const CategorizationModel = array(object({
   categoryName: string(),
