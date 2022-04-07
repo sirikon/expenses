@@ -2,11 +2,11 @@ import React, { useState, useEffect } from "react"
 import { Source } from "../../../core/models"
 import * as sourcesAPI from "../../../services/sourcesAPI"
 import assertUnreachable from "../../../utils/assertUnreachable";
-import { useLoading } from "../../stores/loading";
+import { useGlobalLoading } from "../../stores/loading";
 
 export default () => {
   const sources = useSources();
-  const { whileLoading } = useLoading();
+  const { whileGlobalLoading } = useGlobalLoading();
 
   const login = async (s: Source) => {
     const data: Record<string, string> = {}
@@ -15,7 +15,7 @@ export default () => {
       data[key] = prompt(`Insert: ${key}`) || "";
     }
 
-    const result = await whileLoading("Logging in",
+    const result = await whileGlobalLoading("Logging in",
       () => sourcesAPI.login(s.id, data));
 
     if (result.status === 200) {
@@ -32,7 +32,7 @@ export default () => {
   }
 
   const collect = async (s: Source) => {
-    const result = await whileLoading("Collecting...",
+    const result = await whileGlobalLoading("Collecting...",
       () => sourcesAPI.collect(s.id));
 
     if (result.status === 200) {

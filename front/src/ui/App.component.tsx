@@ -5,10 +5,10 @@ import { HashRouter, NavLink, Navigate, Route, Routes } from "react-router-dom"
 import Collecting from "./views/Collecting";
 import Categorizing from "./views/Categorizing";
 
-import { useLoadingStore } from "./stores/loading"
+import { useGlobalLoadingStore } from "./stores/loading"
 
 export default () => {
-  const loading = useLoadingStore((s) => s.loading)
+  const loading = useGlobalLoadingStore((s) => s.loading)
 
   return <>
     <HashRouter>

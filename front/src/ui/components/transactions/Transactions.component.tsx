@@ -1,13 +1,13 @@
 import React from "react"
 import * as transactionsAPI from "../../../services/transactionsAPI"
-import { useLoading } from "../../stores/loading"
+import { useGlobalLoading } from "../../stores/loading"
 
 export default () => {
 
-  const { whileLoading } = useLoading()
+  const { whileGlobalLoading } = useGlobalLoading()
 
   const populate = async () => {
-    const result = await whileLoading("Populating...",
+    const result = await whileGlobalLoading("Populating...",
       () => transactionsAPI.populate())
     if (result.status !== 200) {
       alert("Unexpected error")

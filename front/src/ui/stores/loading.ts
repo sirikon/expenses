@@ -1,21 +1,21 @@
 import create from "zustand"
 
-export type LoadingStore = {
+export type GlobalLoadingStore = {
   loading: string | null
 }
 
-export const useLoadingStore = create<LoadingStore>(() => ({
+export const useGlobalLoadingStore = create<GlobalLoadingStore>(() => ({
   loading: null
 }))
 
-export const useLoading = () => {
+export const useGlobalLoading = () => {
   return {
-    whileLoading: async <T>(message: string, cb: () => Promise<T>): Promise<T> => {
-      useLoadingStore.setState((s) => ({ ...s, loading: message }))
+    whileGlobalLoading: async <T>(message: string, cb: () => Promise<T>): Promise<T> => {
+      useGlobalLoadingStore.setState((s) => ({ ...s, loading: message }))
       try {
         return await cb();
       } finally {
-        useLoadingStore.setState((s) => ({ ...s, loading: null }))
+        useGlobalLoadingStore.setState((s) => ({ ...s, loading: null }))
       }
     }
   }
