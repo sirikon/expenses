@@ -15,8 +15,10 @@ export default () => {
   }
 
   return <>
-    <button onClick={saveCategorization}>Save</button>
-    <hr />
+    <p>
+      <button onClick={saveCategorization}>Save</button>
+      <hr />
+    </p>
     {state.categorization.map((c, ci) => <p>
       <input type="text" value={c.categoryName} onChange={(e) => c.categoryName = e.target.value} />
       <button onClick={() => state.categorization.splice(ci, 1)}>-</button>
@@ -33,6 +35,8 @@ export default () => {
         <button onClick={() => c.matchers.push({ query: "", condition: "equals", value: "" })}>Add matcher</button>
       </ul>
     </p>)}
-    <button onClick={() => state.categorization.push({ categoryName: "", matchers: [] })}>Add category</button>
+    <p>
+      <button onClick={() => state.categorization.push({ categoryName: "", matchers: [] })}>Add category</button>
+    </p>
   </>
 }
