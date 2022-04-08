@@ -28,11 +28,10 @@ export default () => {
   return <>
     <p>
       <button onClick={saveCategorization}>Save</button>
-      <hr />
     </p>
     <div className="categorizing">
       <div className="half split-vertical">
-        <div style={{maxHeight: 400, overflow: "scroll"}}>
+        <div style={{maxHeight: 500, overflowY: "scroll"}}>
           {state.categorization.map((c, ci) => <p>
             <input type="text" value={c.categoryName} onChange={(e) => (c.categoryName = e.target.value, render())} />
             <button onClick={() => (state.categorization.splice(ci, 1), render())}>-</button>
@@ -53,12 +52,20 @@ export default () => {
             <button onClick={() => (state.categorization.push({ categoryName: "", matchers: [] }), render())}>Add category</button>
           </p>
         </div>
-        <div style={{maxHeight: 400, overflow: "scroll"}}>
-          <table>
+        <div style={{maxHeight: 300, overflowY: "scroll"}}>
+          <table className="transactions" cellSpacing={0}>
             {transactions.map(t =>
               <tr
                 onClick={() => setSelectedTransaction(t)}
                 className={selectedTransaction?.id === t.id ? "selected-transaction" : undefined}>
+                <td>{(() => {
+                  const date = new Date(t.timestamp * 1000);
+                  return [
+                    date.getUTCFullYear(),
+                    (date.getUTCMonth()+1).toString().padStart(2, "0"),
+                    date.getUTCDate().toString().padStart(2, "0")
+                  ].join("/")
+                })()}</td>
                 <td>{t.description}</td>
                 <td>{t.amount}</td>
                 <td>{t.category}</td>
